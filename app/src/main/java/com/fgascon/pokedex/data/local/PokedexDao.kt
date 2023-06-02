@@ -19,6 +19,9 @@ interface PokedexDao {
     @Query("SELECT * FROM pokemons")
     fun getPokemon(): Flow<List<PokemonEntity>>
 
+    @Query("SELECT * FROM pokemons WHERE name LIKE :name")
+    suspend fun getPokemonFiltered(name: String): List<PokemonEntity>
+
     @Query("Select * FROM pokemons where id = :id")
-    fun getPokemonById(id: Int): PokemonEntity
+    suspend fun getPokemonById(id: Int): PokemonEntity
 }

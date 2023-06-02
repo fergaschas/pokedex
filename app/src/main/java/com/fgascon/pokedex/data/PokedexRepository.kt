@@ -1,6 +1,6 @@
 package com.fgascon.pokedex.data
 
-import com.fgascon.pokedex.Pokemon
+import com.fgascon.pokedex.model.Pokemon
 import com.fgascon.pokedex.data.local.PokedexDao
 import com.fgascon.pokedex.data.network.PokedexApi
 import com.fgascon.pokedex.mappers.toDomain
@@ -15,7 +15,7 @@ class PokedexRepository @Inject constructor(
     private val dao: PokedexDao
 ) {
 
-    suspend fun getPokemon(): Flow<List<Pokemon>> {
+    suspend fun getPokedex(): Flow<List<Pokemon>> {
         return dao.getPokemon().map { pokemonEntity ->
             pokemonEntity.map { it.toDomain() }
         }.onEach {
@@ -25,9 +25,20 @@ class PokedexRepository @Inject constructor(
         }
     }
 
+    suspend fun getPokemonById(id: Int): Pokemon {
+        return dao.getPokemonById(id).toDomain()
+    }
+
     private suspend fun refreshPokemon() {
         api.getPokemon().pokemons.forEach(){
             dao.insertPokemon(it.toEntity())
+        }
+    }
+
+    suspend fun getPokemonFiltered(text: String): List<Pokemon> {
+        val likeText = "%$text%"
+        return dao.getPokemonFiltered(likeText).map {
+                it.toDomain()
         }
     }
 

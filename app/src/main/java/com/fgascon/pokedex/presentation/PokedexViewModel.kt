@@ -20,10 +20,21 @@ class PokedexViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val pokemons = repository.getPokemon().collect {
+            val pokemons = repository.getPokedex().collect {
                 _state.value = _state.value.copy(pokemons = it)
             }
         }
+    }
+
+    private fun getPokemonFiltered(text: String) {
+        viewModelScope.launch {
+            val pokemons = repository.getPokemonFiltered(text)
+            _state.value = _state.value.copy(pokemons = pokemons)
+        }
+    }
+
+    fun filterPokemon(text: String) {
+        getPokemonFiltered(text)
     }
 
 }

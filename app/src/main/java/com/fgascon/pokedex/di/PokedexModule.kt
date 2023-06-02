@@ -3,6 +3,7 @@ package com.fgascon.pokedex.di
 import android.app.Application
 import androidx.room.Room
 import com.fgascon.pokedex.data.PokedexRepository
+import com.fgascon.pokedex.data.local.MIGRATION_1_2
 import com.fgascon.pokedex.data.local.PokedexDao
 import com.fgascon.pokedex.data.local.PokedexDatabase
 import com.fgascon.pokedex.data.network.PokedexApi
@@ -33,7 +34,9 @@ object PokedexModule {
     fun providePokedexDao(application: Application): PokedexDao {
         val db = Room.databaseBuilder(
             application, PokedexDatabase::class.java, "pokedex"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
         return db.getPokedexDao()
     }
 
