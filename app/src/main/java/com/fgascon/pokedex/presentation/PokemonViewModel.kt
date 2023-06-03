@@ -1,22 +1,22 @@
 package com.fgascon.pokedex.presentation
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fgascon.pokedex.data.PokedexRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
     private val repository: PokedexRepository,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val _state = mutableStateOf(PokemonState())
-        val state: State<PokemonState> = _state
+    private val _state: MutableStateFlow<PokemonState> = MutableStateFlow(PokemonState())
+    val state = _state.asStateFlow()
 
     init {
         val id = savedStateHandle.get<Int>("id") ?: 0
